@@ -1,27 +1,3 @@
-/*
-Copyright (c) 2012 Twilio, Inc.
-
-Permission is hereby granted, free of charge, to any person
-obtaining a copy of this software and associated documentation
-files (the "Software"), to deal in the Software without
-restriction, including without limitation the rights to use,
-copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the
-Software is furnished to do so, subject to the following
-conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-OTHER DEALINGS IN THE SOFTWARE.
-*/
 @isTest
 class Twilio_TestAccounts {
 
@@ -40,16 +16,16 @@ class Twilio_TestAccounts {
 			+'"uri": "/2010-04-01/Accounts/ACba8bc05eacf94afdae398e642c9cc32d.json",'
 			+'"subresource_uris": {'
 				+'"available_phone_numbers": "/2010-04-01/Accounts/ACba8bc05eacf94afdae398e642c9cc32d/AvailablePhoneNumbers.json",'
-		        +'"calls": "/2010-04-01/Accounts/ACba8bc05eacf94afdae398e642c9cc32d/Calls.json",'
-		        +'"conferences": "/2010-04-01/Accounts/ACba8bc05eacf94afdae398e642c9cc32d/Conferences.json",'
-		        +'"incoming_phone_numbers": "/2010-04-01/Accounts/ACba8bc05eacf94afdae398e642c9cc32d/IncomingPhoneNumbers.json",'
-		        +'"notifications": "/2010-04-01/Accounts/ACba8bc05eacf94afdae398e642c9cc32d/Notifications.json",'
-		        +'"outgoing_caller_ids": "/2010-04-01/Accounts/ACba8bc05eacf94afdae398e642c9cc32d/OutgoingCallerIds.json",'
-		        +'"recordings": "/2010-04-01/Accounts/ACba8bc05eacf94afdae398e642c9cc32d/Recordings.json",'
-		        +'"sandbox": "/2010-04-01/Accounts/ACba8bc05eacf94afdae398e642c9cc32d/Sandbox.json",'
-		        +'"sms_messages": "/2010-04-01/Accounts/ACba8bc05eacf94afdae398e642c9cc32d/SMS/Messages.json",'
-		        +'"transcriptions": "/2010-04-01/Accounts/ACba8bc05eacf94afdae398e642c9cc32d/Transcriptions.json"'
-		    +'} }';
+				+'"calls": "/2010-04-01/Accounts/ACba8bc05eacf94afdae398e642c9cc32d/Calls.json",'
+				+'"conferences": "/2010-04-01/Accounts/ACba8bc05eacf94afdae398e642c9cc32d/Conferences.json",'
+				+'"incoming_phone_numbers": "/2010-04-01/Accounts/ACba8bc05eacf94afdae398e642c9cc32d/IncomingPhoneNumbers.json",'
+				+'"notifications": "/2010-04-01/Accounts/ACba8bc05eacf94afdae398e642c9cc32d/Notifications.json",'
+				+'"outgoing_caller_ids": "/2010-04-01/Accounts/ACba8bc05eacf94afdae398e642c9cc32d/OutgoingCallerIds.json",'
+				+'"recordings": "/2010-04-01/Accounts/ACba8bc05eacf94afdae398e642c9cc32d/Recordings.json",'
+				+'"sandbox": "/2010-04-01/Accounts/ACba8bc05eacf94afdae398e642c9cc32d/Sandbox.json",'
+				+'"sms_messages": "/2010-04-01/Accounts/ACba8bc05eacf94afdae398e642c9cc32d/SMS/Messages.json",'
+				+'"transcriptions": "/2010-04-01/Accounts/ACba8bc05eacf94afdae398e642c9cc32d/Transcriptions.json"'
+			+'} }';
 
 		// register a mock Response with the Twilio_TestHTTPMock singleton service
 		// for the HTTP GET method and at the Twilio Account instance URI.

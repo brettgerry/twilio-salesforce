@@ -1,27 +1,3 @@
-/*
-Copyright (c) 2012 Twilio, Inc.
-
-Permission is hereby granted, free of charge, to any person
-obtaining a copy of this software and associated documentation
-files (the "Software"), to deal in the Software without
-restriction, including without limitation the rights to use,
-copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the
-Software is furnished to do so, subject to the following
-conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-OTHER DEALINGS IN THE SOFTWARE.
-*/
 /**
  * The Class TwilioRestClient.
  */
@@ -154,7 +130,7 @@ public class TwilioRestClient {
 	 * @return the http uri request
 	 */
 	private HttpRequest buildMethod(String method, String path,
-			Map<String,String> params) {
+			List<NameValuePair> params) {
 		if (method.equalsIgnoreCase('GET')) {
 			return generateGetRequest(path, params);
 		} else if (method.equalsIgnoreCase('POST')) {
@@ -177,7 +153,7 @@ public class TwilioRestClient {
 	 *            the params
 	 * @return the http get
 	 */
-	private HttpRequest generateGetRequest(String path, Map<String,String> params) {
+	private HttpRequest generateGetRequest(String path, List<NameValuePair> params) {
 
 		URL uri = buildUri(path, params);
 		HttpRequest req = new HttpRequest();
@@ -195,7 +171,7 @@ public class TwilioRestClient {
 	 *            the params
 	 * @return the http post
 	 */
-	private HttpRequest generatePostRequest(String path, Map<String,String> params) {
+	private HttpRequest generatePostRequest(String path, List<NameValuePair> params) {
 		URL uri = buildUri(path);
 
 		String entity = buildEntityBody(params);
@@ -217,7 +193,7 @@ public class TwilioRestClient {
 	 *            the params
 	 * @return the http put
 	 */
-	private HttpRequest generatePutRequest(String path, Map<String,String> params) {
+	private HttpRequest generatePutRequest(String path, List<NameValuePair> params) {
 		URL uri = buildUri(path);
 
 		String entity = buildEntityBody(params);
@@ -240,7 +216,7 @@ public class TwilioRestClient {
 	 * @return the http delete
 	 */
 	private HttpRequest generateDeleteRequest(String path,
-			Map<String,String> params) {
+			List<NameValuePair> params) {
 		URL uri = buildUri(path);
 
 		HttpRequest req = new HttpRequest();
@@ -260,13 +236,13 @@ public class TwilioRestClient {
 	 *            the params
 	 * @return the url encoded form entity
 	 */
-	private String buildEntityBody(Map<String,String> params) {
+	private String buildEntityBody(List<NameValuePair> params) {
 		String entityBody='';
 		if (params != null) {
-			for (String key : params.keySet()) {
+			for (NameValuePair param : params) {
 				try {
 					entityBody += (entityBody=='' ? '' : '&')
-									+ key + '=' + EncodingUtil.urlEncode(params.get(key), 'UTF-8');
+						+ param.getKey() + '=' + EncodingUtil.urlEncode(param.getValue(), 'UTF-8');
 				} catch (Exception e) {
 					System.debug('ERROR: ' + e);
 				}
@@ -295,7 +271,7 @@ public class TwilioRestClient {
 	 *            the query string params
 	 * @return the uRI
 	 */
-	private URL buildUri(String path, Map<String,String> queryStringParams) {
+	private URL buildUri(String path, List<NameValuePair> queryStringParams) {
 		String sb = path;
 
 		if (queryStringParams != null && queryStringParams.size() > 0) {
@@ -311,6 +287,26 @@ public class TwilioRestClient {
 		}
 
 		return uri;
+	}
+
+	/**
+	 * Generate parameters.
+	 *
+	 * @param vars
+	 *            the vars
+	 * @return the list
+	 */
+	private static List<NameValuePair> generateParameters(
+			Map<String, String> vars) {
+		List<NameValuePair> qparams = new ArrayList<NameValuePair>();
+
+		if (vars != null) {
+			for (String var : vars.keySet()) {
+				qparams.add(new BasicNameValuePair(var, vars.get(var)));
+			}
+		}
+
+		return qparams;
 	}
 
 	/**
@@ -332,7 +328,14 @@ public class TwilioRestClient {
 	public TwilioRestResponse request(String path, String method,
 			Map<String, String> vars) {
 
-		HttpRequest request = setupRequest(path, method, vars);
+		List<NameValuePair> paramList = generateParameters(vars);
+		return request(path, method, paramList);
+	}
+
+	public TwilioRestResponse request(String path, String method,
+			List<NameValuePair> paramList) {
+
+		HttpRequest request = setupRequest(path, method, paramList);
 
 		String responseBody;
 		Integer statusCode;
@@ -417,9 +420,29 @@ public class TwilioRestClient {
 	 */
 	public TwilioRestResponse safeRequest(String path, String method,
 			Map<String, String> vars) {
+
+		List<NameValuePair> paramList = generateParameters(vars);
+		return safeRequest(path, method, method, paramList);
+	}
+
+	/**
+	 * Make a request, handles retries + back-off for server/network errors
+	 * 
+	 * @param path
+	 *            the URL (absolute w.r.t. the endpoint URL - i.e.
+	 *            /2010-04-01/Accounts)
+	 * @param method
+	 *            the HTTP method to use, defaults to GET
+	 * @param vars
+	 *            for POST or PUT, a list of data to send, for GET will be
+	 *            appended to the URL as querystring params
+	 * @return The response
+	 */
+	public TwilioRestResponse safeRequest(String path, String method,
+			List<NameValuePair> paramList) {
 		TwilioRestResponse response = null;
 		for (Integer retry = 0; retry < this.numRetries; retry++) {
-			response = request(path, method, vars);
+			response = request(path, method, paramList);
 			if (response.isClientError()) {
 				System.debug('Twilio REST API Client Error: '+response.getResponseText());
 				throw new TwilioRestException(response);

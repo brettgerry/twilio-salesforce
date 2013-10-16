@@ -21,17 +21,6 @@ global class TwilioMedia extends TwilioResource.InstanceResource {
 	 * Instantiates a new media instance.
 	 *
 	 * @param client the client
-	 * @param mediaSid the sid
-	 */
-	public TwilioMedia(TwilioRestClient client, String mediaSid) {
-		super(client);
-		this.setProperty(SID_PROPERTY, mediaSid);
-	}
-
-	/**
-	 * Instantiates a new media instance.
-	 *
-	 * @param client the client
 	 * @param messageSid the sid of the parent message
 	 * @param mediaSid the sid
 	 */
@@ -55,16 +44,10 @@ global class TwilioMedia extends TwilioResource.InstanceResource {
 	 * @see com.twilio.sdk.resource.Resource#getResourceLocation()
 	 */
 	protected String getResourceLocation() {
-		if (this.getRequestMessageSid() != null) {
-			return '/' + TwilioRestClient.DEFAULT_VERSION
-				+ '/Accounts/' + this.getRequestAccountSid()
-				+ '/Messages/' + this.getRequestMessageSid()
-				+ '/Media/' + this.getSid() + '.json';
-		} else {
-			return '/' + TwilioRestClient.DEFAULT_VERSION
-				+ '/Accounts/' + this.getRequestAccountSid()
-				+ '/Media/' + this.getSid() + '.json';
-		}
+		return '/' + TwilioRestClient.DEFAULT_VERSION
+			+ '/Accounts/' + this.getRequestAccountSid()
+			+ '/Messages/' + this.getRequestMessageSid()
+			+ '/Media/' + this.getSid() + '.json';
 	}
 
 	/**
